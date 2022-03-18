@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "value": "ryandeploydemo"
+    },
+    "hostingPlanName": {
+      "value": "ryandeployplan"
+    },
+    "location": {
+      "value": "East Asia"
+    },
+    "sku": {
+      "value": "Free"
+    },
+    "repoUrl": {
+      "value": "https://github.com/taorun/MyDemo.git"
+    },
+    "branch": {
+      "value": "master"
+    }
+  }
+}
