@@ -6,13 +6,10 @@
       "value": "ryandeploydemo"
     },
     "hostingPlanName": {
-      "value": "ryandeployplan2"
+      "value": "ryandeployplan3"
     },
     "location": {
       "value": "East Asia"
-    },
-    "sku": {
-      "value": "Free"
     },
     "repoUrl": {
       "value": "https://github.com/taorun/MyDemo.git"
