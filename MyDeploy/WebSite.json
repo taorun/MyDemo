@@ -38,17 +38,10 @@
     {
       "apiVersion": "2020-06-01",
       "name": "[parameters('hostingPlanName')]",
-      "type": "Microsoft.Web/serverFarms",
+      "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('location')]",
       "sku": {
         "name": "F1"
-      },
-      "kind": "app",
-      "properties": {
-        "perSiteScaling": false,
-        "reserved": true,
-        "targetWorkerCount": 0,
-        "targetWorkerSizeId": 0
       }
     },
     {
@@ -57,24 +50,25 @@
       "type": "Microsoft.Web/sites",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverFarms', parameters('hostingPlanName'))]"
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
       ],
       "properties": {
         "serverFarmId": "[parameters('hostingPlanName')]"
       },
       "resources": [
         {
+          "condition": "[contains(parameters('repoUrl'),'http')]",
           "apiVersion": "2020-06-01",
           "name": "web",
           "type": "sourcecontrols",
           "location": "[parameters('location')]",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
           ],
           "properties": {
-            "RepoUrl": "[parameters('repoUrl')]",
+            "repoUrl": "[parameters('repoUrl')]",
             "branch": "[parameters('branch')]",
-            "IsManualIntegration": true
+            "isManualIntegration": true
           }
         }
       ]
