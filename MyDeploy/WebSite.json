@@ -70,8 +70,36 @@
             "branch": "[parameters('branch')]",
             "isManualIntegration": true
           }
+        },
+        {
+          "apiVersion": "2020-06-01",
+          "name": "appsettings",
+          "type": "config",
+          "kind": "string",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('apiSiteName'))]"
+          ],
+          "properties": {
+            "key1": "value1",
+            "key2": "value2"
+          }
+        },
+        {
+          "apiVersion": "2020-06-01",
+          "name": "connectionstrings",
+          "type": "config",
+          "kind": "string",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', variables('apiSiteName'))]"
+          ],
+          "properties": {
+            "MySqlServerDB": {
+              "value": "Server=tcp: myfakesqldb,1433;Initial Catalog=mydb;User Id= myuser@mysqlserver;Password=pwd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True",
+              "type": "SQLAzure"
+            }
+          }
         }
-      ]
+       ]
     }
   ]
 }
