@@ -2,6 +2,8 @@
 using ASPWebAPIDemo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
 
 namespace ASPWebAPIDemo.Controllers
 {
@@ -9,11 +11,20 @@ namespace ASPWebAPIDemo.Controllers
     [ApiController]
     public class CatController : ControllerBase
     {
+        private readonly IConfiguration configuration;
+        public CatController(IConfiguration config)
+        {
+            this.configuration = config;
+        }
+
         [HttpGet]
         public ActionResult<List<Cat>> GetAll() => CatService.GetAll();
 
         [HttpGet("{id}")]
         public ActionResult<Cat> Get(int id) => CatService.GetAll().FirstOrDefault(x => x.Id == id);
+        [HttpGet]
+        [Route("config")]
+        public ActionResult<String> GetConfig() => configuration.GetSection("key1").Value;
 
         [HttpPost]
         public IActionResult Create(Cat cat)
