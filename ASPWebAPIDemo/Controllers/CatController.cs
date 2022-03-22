@@ -23,7 +23,7 @@ namespace ASPWebAPIDemo.Controllers
         [HttpGet("{id}")]
         public ActionResult<Cat> Get(int id) => CatService.GetAll().FirstOrDefault(x => x.Id == id);
         [HttpGet]
-        [Route("config")]
+        [Route("mycfg")]
         public ActionResult<String> GetConfig() => configuration.GetSection("key1").Value;
 
         [HttpPost]
