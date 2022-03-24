@@ -16,6 +16,12 @@
     },
     "branch": {
       "value": "master"
+    },
+    "keyVaultName": {
+      "value": "ryandeploykeyvault"
+    },
+    "adUserId": {
+      "value": "d0015611-d81e-4c3b-baca-856fb64bc5b4"
     }
   }
 }

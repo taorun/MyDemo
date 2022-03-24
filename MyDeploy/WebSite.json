@@ -29,6 +29,16 @@
     "branch": {
       "type": "string",
       "defaultValue": "master"
+    },
+    "tenantId": {
+      "type": "string",
+      "defaultValue": "[subscription().tenantId]"
+    },
+    "adUserId": {
+      "type": "string"
+    },
+    "keyVaultName": {
+      "type": "string"
     }
   },
   "variables": {
@@ -57,19 +67,6 @@
       },
       "resources": [
         {
-          "apiVersion": "2020-06-01",
-          "name": "appsettings",
-          "type": "config",
-          "kind": "string",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-          ],
-          "properties": {
-            "key1": "value1",
-            "key2": "value2"
-          }
-        },
-        {
           "condition": "[contains(parameters('repoUrl'),'http')]",
           "apiVersion": "2020-06-01",
           "name": "web",
@@ -81,7 +78,21 @@
           "properties": {
             "repoUrl": "[parameters('repoUrl')]",
             "branch": "[parameters('branch')]",
-            "isManualIntegration": true
+            "isManualIntegration": false
+          }
+        },
+        {
+          "apiVersion": "2020-06-01",
+          "name": "appsettings",
+          "type": "config",
+          "kind": "string",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
+            "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
+          ],
+          "properties": {
+            "key1": "value1",
+            "key2": "value2"
           }
         },
         {
@@ -90,7 +101,8 @@
           "type": "config",
           "kind": "string",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
+            "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
           ],
           "properties": {
             "MySqlServerDB": {
@@ -100,6 +112,73 @@
           }
         }
       ]
+    },
+    {
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "enabledForDeployment": false,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "accessPolicies": [
+          {
+            "objectId": "[parameters('adUserId')]",
+            "tenantId": "[parameters('tenantId')]",
+            "permissions": {
+              "keys": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "secrets": [
+                "Get",
+                "List",
+                "Set",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "certificates": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore",
+                "ManageContacts",
+                "ManageIssuers",
+                "GetIssuers",
+                "ListIssuers",
+                "SetIssuers",
+                "DeleteIssuers"
+              ]
+            }
+          }
+        ],
+        "tenantId": "[parameters('tenantId')]",
+        "sku": {
+          "name": "standard",
+          "family": "A"
+        }
+      }
     }
-  ]
+  ],
+  "outputs": {
+    "keyVaultId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+    }
+  }
 }
