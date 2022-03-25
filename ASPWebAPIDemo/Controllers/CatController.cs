@@ -41,12 +41,24 @@ namespace ASPWebAPIDemo.Controllers
                  }
             };
 
-            var client = new SecretClient(new Uri("https://ryandeploykeyvault.vault.azure.net/"), new DefaultAzureCredential(), options);
+            var client = new SecretClient(new Uri("https://ryandeploykeyvault.vault.azure.net/"), 
+                new DefaultAzureCredential(new DefaultAzureCredentialOptions { ManagedIdentityClientId = "0bceb401-b0de-4f63-8006-01cf6943eadf" }), options);
+           
+            KeyVaultSecret secret;
+            try
+            {
+                secret = client.GetSecret("mykeyvaultkey");
 
-            KeyVaultSecret secret = client.GetSecret("mykeyvaultkey");
+            }
+            catch (AuthenticationFailedException ex)
+            {
+                return $"Error: {ex.Message}";
+            }
 
             string secretValue = secret.Value;
-            return $"Appsettings: {configuration.GetSection("key1").Value} Secret:{secretValue}";
+            string appSettingValue = configuration.GetSection("key1").Value;
+            return $"Appsettings: {appSettingValue} Secret:{secretValue}";
+
         }
 
         [HttpPost]
