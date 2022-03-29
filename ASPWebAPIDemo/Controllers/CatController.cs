@@ -57,7 +57,8 @@ namespace ASPWebAPIDemo.Controllers
 
             string secretValue = secret.Value;
             string appSettingValue = configuration.GetSection("key1").Value;
-            return $"Appsettings: {appSettingValue} Secret:{secretValue}";
+            string connetionString = configuration.GetConnectionString("MySqlServerDB");
+            return $"Appsettings: {appSettingValue}; Secret:{secretValue}; ConnectionString:{connetionString}";
 
         }
 

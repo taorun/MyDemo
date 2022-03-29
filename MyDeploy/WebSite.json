@@ -52,6 +52,9 @@
       "location": "[parameters('location')]",
       "sku": {
         "name": "F1"
+      },
+      "properties": {
+        "reserved": false
       }
     },
     {
@@ -62,11 +65,17 @@
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
       ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "/subscriptions/cc7d0292-541f-44e0-91a9-d6bcbd6f3804/resourcegroups/vsdeploy/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ryankeyvaultidentity": {}
+        }
+      },
       "properties": {
         "serverFarmId": "[parameters('hostingPlanName')]"
       },
       "resources": [
-        {
+        /*{
           "condition": "[contains(parameters('repoUrl'),'http')]",
           "apiVersion": "2020-06-01",
           "name": "web",
@@ -80,15 +89,15 @@
             "branch": "[parameters('branch')]",
             "isManualIntegration": false
           }
-        },
+        },*/
         {
           "apiVersion": "2020-06-01",
           "name": "appsettings",
           "type": "config",
           "kind": "string",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-            "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+            //"[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
           ],
           "properties": {
             "key1": "value1",
@@ -101,8 +110,8 @@
           "type": "config",
           "kind": "string",
           "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]",
-            "[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+            //"[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
           ],
           "properties": {
             "MySqlServerDB": {
@@ -112,8 +121,8 @@
           }
         }
       ]
-    },
-    {
+    }
+    /*{
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2021-06-01-preview",
       "name": "[parameters('keyVaultName')]",
@@ -173,7 +182,7 @@
           "family": "A"
         }
       }
-    }
+    }*/
   ],
   "outputs": {
     "keyVaultId": {
