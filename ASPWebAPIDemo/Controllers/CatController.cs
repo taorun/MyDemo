@@ -58,7 +58,9 @@ namespace ASPWebAPIDemo.Controllers
             string secretValue = secret.Value;
             string appSettingValue = configuration.GetSection("key1").Value;
             string connetionString = configuration.GetConnectionString("MySqlServerDB");
-            return $"Appsettings: {appSettingValue}; Secret:{secretValue}; ConnectionString:{connetionString}";
+            string appSettingFromKeyVault = configuration.GetSection("key3_from_keyvault").Value;
+            string key4 = configuration.GetSection("mykeyvaultkey").Value;
+            return $"Appsettings: {appSettingValue}; Secret:{secretValue}; ConnectionString:{connetionString}; SettingsFromKeyVault:{appSettingFromKeyVault}; key4:{key4}";
 
         }
 

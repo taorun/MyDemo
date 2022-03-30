@@ -101,7 +101,8 @@
           ],
           "properties": {
             "key1": "value1",
-            "key2": "value2"
+            "key2": "value2",
+            "key3_from_keyvault": "@Microsoft.KeyVault(SecretUri=https://ryandeploykeyvault.vault.azure.net/secrets/mykeyvaultkey/db93846c7c064a9ea0f5bb4e4822b3d4)"
           }
         },
         {
