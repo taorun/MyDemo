@@ -39,7 +39,11 @@
     },
     "keyVaultName": {
       "type": "string"
+    },
+    "managedIdentityId": {
+      "type": "string"
     }
+
   },
   "variables": {
     "apiSiteName": "[concat(parameters('siteName'), 'Api')]"
@@ -72,7 +76,8 @@
         }
       },
       "properties": {
-        "serverFarmId": "[parameters('hostingPlanName')]"
+        "serverFarmId": "[parameters('hostingPlanName')]",
+        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]"
       },
       "resources": [
         /*{

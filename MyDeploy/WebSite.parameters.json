@@ -22,6 +22,9 @@
     },
     "adUserId": {
       "value": "d0015611-d81e-4c3b-baca-856fb64bc5b4"
+    },
+    "managedIdentityId": {
+      "value": "/subscriptions/cc7d0292-541f-44e0-91a9-d6bcbd6f3804/resourceGroups/vsdeploy/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ryankeyvaultidentity"
     }
   }
 }
