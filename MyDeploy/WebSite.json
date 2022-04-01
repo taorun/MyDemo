@@ -42,6 +42,10 @@
     },
     "managedIdentityId": {
       "type": "string"
+    },
+    "secretUri": {
+      "type": "string",
+      "defaultValue": "https://ryandeploykeyvault.vault.azure.net/secrets/mykeyvaultkey/db93846c7c064a9ea0f5bb4e4822b3d4"
     }
 
   },
@@ -55,7 +59,7 @@
       "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('location')]",
       "sku": {
-        "name": "F1"
+        "name": "S1"
       },
       "properties": {
         "reserved": false
@@ -72,12 +76,40 @@
       "identity": {
         "type": "UserAssigned",
         "userAssignedIdentities": {
-          "/subscriptions/cc7d0292-541f-44e0-91a9-d6bcbd6f3804/resourcegroups/vsdeploy/providers/Microsoft.ManagedIdentity/userAssignedIdentities/ryankeyvaultidentity": {}
+          "[parameters('managedIdentityId')]": {}
         }
       },
       "properties": {
         "serverFarmId": "[parameters('hostingPlanName')]",
-        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]"
+        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "key1",
+              "value": "value2"
+            },
+            {
+              "name": "key2",
+              "value": "value2"
+            },
+            {
+              "name": "key3_from_keyvault",
+              "value": "@Microsoft.KeyVault(SecretUri=https://ryandeploykeyvault.vault.azure.net/secrets/mykeyvaultkey/db93846c7c064a9ea0f5bb4e4822b3d4)"
+            }
+          ],
+          "connectionStrings": [
+            {
+              "name": "MySqlServerDB",
+              "connectionString": "Server=tcp: myfakesqldb,1433;Initial Catalog=mydb;User Id= myuser@mysqlserver;Password=pwd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True",
+              "type": "SQLServer"
+            },
+            {
+              "name": "SecretsConnectString",
+              "connectionString": "[concat('@Microsoft.KeyVault(SecretUri=', parameters('secretUri'), ')')]",
+              "type": "Custom"
+            }
+          ]
+        }
       },
       "resources": [
         /*{
@@ -95,39 +127,8 @@
             "isManualIntegration": false
           }
         },*/
-        {
-          "apiVersion": "2020-06-01",
-          "name": "appsettings",
-          "type": "config",
-          "kind": "string",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-            //"[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
-          ],
-          "properties": {
-            "key1": "value1",
-            "key2": "value2",
-            "key3_from_keyvault": "@Microsoft.KeyVault(SecretUri=https://ryandeploykeyvault.vault.azure.net/secrets/mykeyvaultkey/db93846c7c064a9ea0f5bb4e4822b3d4)"
-          }
-        },
-        {
-          "apiVersion": "2020-06-01",
-          "name": "connectionstrings",
-          "type": "config",
-          "kind": "string",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
-            //"[resourceId('Microsoft.Web/sites/sourcecontrols', parameters('siteName'), 'web')]"
-          ],
-          "properties": {
-            "MySqlServerDB": {
-              "value": "Server=tcp: myfakesqldb,1433;Initial Catalog=mydb;User Id= myuser@mysqlserver;Password=pwd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True",
-              "type": "SQLAzure"
-            }
-          }
-        }
       ]
-    }
+    },
     /*{
       "type": "Microsoft.KeyVault/vaults",
       "apiVersion": "2021-06-01-preview",
@@ -189,6 +190,36 @@
         }
       }
     }*/
+    {
+      "apiVersion": "2020-06-01",
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('siteName'), '/slot')]",
+      "location": "[parameters('location')]",
+      "comments": "This specifies the web app slots.",
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[parameters('managedIdentityId')]": {}
+        }
+      },
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "key4",
+              "value": "value4"
+            }
+          ]
+        }
+      },
+
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+      ]
+    }
+    
   ],
   "outputs": {
     "keyVaultId": {
