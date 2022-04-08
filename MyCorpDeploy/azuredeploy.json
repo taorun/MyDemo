@@ -1,0 +1,236 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "type": "string"
+    },
+    "hostingPlanName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "sku": {
+      "type": "string",
+      "allowedValues": [
+        "Free",
+        "Shared",
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "defaultValue": "Free"
+    },
+    "repoUrl": {
+      "type": "string"
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "master"
+    },
+    "tenantId": {
+      "type": "string",
+      "defaultValue": "[subscription().tenantId]"
+    },
+    "adUserId": {
+      "type": "string"
+    },
+    "keyVaultName": {
+      "type": "string"
+    },
+    "managedIdentityId": {
+      "type": "string"
+    },
+    "secretUri": {
+      "type": "string",
+      "defaultValue": "https://ryankeyvaulttesting.vault.azure.net/secrets/mysecret/43d0f14f6b8c4675b21139799a2f147c"
+    },
+    "servicePackageLink": {
+      "type": "string"
+    }
+  },
+  "variables": {
+    "apiSiteName": "[concat(parameters('siteName'), 'Api')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "S1"
+      },
+      "properties": {
+        "reserved": false
+      }
+    },
+    {
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('siteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[parameters('managedIdentityId')]": {}
+        }
+      },
+      "properties": {
+        "serverFarmId": "[parameters('hostingPlanName')]",
+        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]",
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "key1",
+              "value": "value2"
+            },
+            {
+              "name": "key2",
+              "value": "value2"
+            },
+            {
+              "name": "key3_from_keyvault",
+              "value": "@Microsoft.KeyVault(SecretUri=https://ryankeyvaulttesting.vault.azure.net/secrets/mysecret/43d0f14f6b8c4675b21139799a2f147c)"
+            }
+          ],
+          "connectionStrings": [
+            {
+              "name": "MySqlServerDB",
+              "connectionString": "Server=tcp: myfakesqldb,1433;Initial Catalog=mydb;User Id= myuser@mysqlserver;Password=pwd;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True",
+              "type": "SQLServer"
+            },
+            {
+              "name": "SecretsConnectString",
+              "connectionString": "[concat('@Microsoft.KeyVault(SecretUri=', parameters('secretUri'), ')')]",
+              "type": "Custom"
+            }
+          ]
+        }
+      },
+      "resources": [
+        /*{
+          "condition": "[contains(parameters('repoUrl'),'http')]",
+          "apiVersion": "2020-06-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "location": "[parameters('location')]",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+          ],
+          "properties": {
+            "repoUrl": "[parameters('repoUrl')]",
+            "branch": "[parameters('branch')]",
+            "isManualIntegration": false
+          }
+        },*/
+        {
+          "apiVersion": "2020-06-01",
+          "name": "MSDeploy",
+          "type": "extensions",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+          ],
+          "properties": {
+            "packageUri": "[parameters('servicePackageLink')]"
+          }
+        }
+
+      ]
+    },
+    /*{
+      "type": "Microsoft.KeyVault/vaults",
+      "apiVersion": "2021-06-01-preview",
+      "name": "[parameters('keyVaultName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "enabledForDeployment": false,
+        "enabledForTemplateDeployment": true,
+        "enabledForDiskEncryption": false,
+        "accessPolicies": [
+          {
+            "objectId": "[parameters('adUserId')]",
+            "tenantId": "[parameters('tenantId')]",
+            "permissions": {
+              "keys": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "secrets": [
+                "Get",
+                "List",
+                "Set",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore"
+              ],
+              "certificates": [
+                "Get",
+                "List",
+                "Update",
+                "Create",
+                "Import",
+                "Delete",
+                "Recover",
+                "Backup",
+                "Restore",
+                "ManageContacts",
+                "ManageIssuers",
+                "GetIssuers",
+                "ListIssuers",
+                "SetIssuers",
+                "DeleteIssuers"
+              ]
+            }
+          }
+        ],
+        "tenantId": "[parameters('tenantId')]",
+        "sku": {
+          "name": "standard",
+          "family": "A"
+        }
+      }
+    }*/
+    {
+      "apiVersion": "2020-06-01",
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('siteName'), '/slot')]",
+      "location": "[parameters('location')]",
+      "comments": "This specifies the web app slots.",
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[parameters('managedIdentityId')]": {}
+        }
+      },
+      "properties": {
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]",
+        "keyVaultReferenceIdentity": "[parameters('managedIdentityId')]"
+      },
+
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
+      ]
+    }
+
+  ],
+  "outputs": {
+    "keyVaultId": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "siteName": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "targetBuildVersion": {
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "apiVersion": "2020-06-01",
+      "type": "Microsoft.Web/sites/slots",
+      "name": "[concat(parameters('siteName'), '/slot')]",
+      "location": "[parameters('location')]",
+      "comments": "This specifies the web app slots.",
+      "properties": {
+        "buildVersion": "[parameters('targetBuildVersion')]"
+      }
+    },
+    {
+      "apiVersion": "2020-06-01",
+      "name": "[parameters('siteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites/slots', parameters('siteName'),'slot')]"
+      ],
+      "properties": {
+        "targetBuildVersion": "[parameters('targetBuildVersion')]"
+      }
+    }
+  ]
+}

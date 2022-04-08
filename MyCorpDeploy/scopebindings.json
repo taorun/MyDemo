@@ -1,0 +1,41 @@
+﻿{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/scopeBindings.json",
+  "contentVersion": "0.0.0.1",
+  "scopeBindings": [
+    {
+      "scopeTagName": "MyAppCompute",
+      "bindings": [
+        {
+          "find": "__DUMMYKEY__",
+          "replaceWith": "dummyvaule"
+        }
+      ]
+    },
+    {
+      "scopeTagName": "EastUSRegion",
+      "bindings": [
+        {
+          "find": "__LOCATION__",
+          "replaceWith": "East US"
+        },
+        {
+          "find": "__SITENAME__",
+          "replaceWith": "ryancorpdeploydemoeast"
+        }
+      ]
+    },
+    {
+      "scopeTagName": "WestUSRegion",
+      "bindings": [
+        {
+          "find": "__LOCATION__",
+          "replaceWith": "West US"
+        },
+        {
+          "find": "__SITENAME__",
+          "replaceWith": "ryancorpdeploydemowest"
+        }
+      ]
+    }
+  ]
+}

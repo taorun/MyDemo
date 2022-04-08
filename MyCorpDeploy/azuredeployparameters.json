@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "paths": [
+    {
+      "parameterReference": "servicePackageLink"
+    }
+  ],
+  "parameters": {
+    "siteName": {
+      "value": "__SITENAME__"
+    },
+    "hostingPlanName": {
+      "value": "ryandeployplan"
+    },
+    "location": {
+      "value": "__LOCATION__"
+    },
+    "repoUrl": {
+      "value": "https://github.com/taorun/MyDemo.git"
+    },
+    "branch": {
+      "value": "master"
+    },
+    "keyVaultName": {
+      "value": "ryankeyvaulttesting"
+    },
+    "adUserId": {
+      "value": "d0015611-d81e-4c3b-baca-856fb64bc5b4"
+    },
+    "managedIdentityId": {
+      "value": "/subscriptions/84cf99a3-1ad1-4304-bcf2-95b76da5f3d5/resourcegroups/ryandeploytesting/providers/Microsoft.ManagedIdentity/userAssignedIdentities/websiteidentity"
+    },
+    "servicePackageLink": {
+      "value": "ASPWebAPIDemo.zip"
+    },
+    "targetBuildVersion": {
+      "value": "1.0.2"
+    }
+  }
+}

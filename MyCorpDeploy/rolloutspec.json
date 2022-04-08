@@ -1,0 +1,40 @@
+﻿{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/rolloutSpecification.json",
+  "rolloutMetadata": {
+    "serviceModelPath": "servicemodel.json",
+    "scopeBindingsPath": "scopebindings.json",
+    "name": "ryan corpnet website deploy",
+    "rolloutType": "Major",
+    "buildSource": {
+      "parameters": {
+        "versionFile": "buildver.txt"
+      }
+    },
+    "notification": {
+      "email": {
+        "to": "runtao@microsoft.com"
+      }
+    }
+  },
+  "orchestratedsteps": [
+    {
+      "name": "East Region",
+      "targetType": "ServiceResource",
+      "targetName": "ryanwebappeastus",
+      "actions": [
+        "Deploy"
+      ]
+    }
+    /*{
+      "name": "West Region",
+      "targetType": "ServiceResource",
+      "targetName": "ryanwebappwestus",
+      "actions": [
+        "Deploy"
+      ],
+      "dependsOn": [
+        "East Region"
+      ]
+    }*/
+  ]
+}

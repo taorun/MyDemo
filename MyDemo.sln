@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ASPWebAPIDemo", "ASPWebAPID
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MyDeploy", "MyDeploy\MyDeploy.deployproj", "{2EF41D8A-FB71-4244-B2FF-D130D7A2E0F9}"
 EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MyCorpDeploy", "MyCorpDeploy\MyCorpDeploy.deployproj", "{61321818-DA0D-48C3-8DA5-14FD67EC6B86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2EF41D8A-FB71-4244-B2FF-D130D7A2E0F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2EF41D8A-FB71-4244-B2FF-D130D7A2E0F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2EF41D8A-FB71-4244-B2FF-D130D7A2E0F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61321818-DA0D-48C3-8DA5-14FD67EC6B86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61321818-DA0D-48C3-8DA5-14FD67EC6B86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61321818-DA0D-48C3-8DA5-14FD67EC6B86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61321818-DA0D-48C3-8DA5-14FD67EC6B86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

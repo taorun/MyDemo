@@ -1,0 +1,72 @@
+﻿{
+  "$schema": "https://ev2schema.azure.net/schemas/2020-01-01/serviceModel.json",
+  "serviceMetadata": {
+    "serviceGroup": "ryanwebsitedeploy",
+    "environment": "Test"
+  },
+  "serviceResourceGroupDefinitions": [
+    {
+      "name": "ryanwebsitegroup",
+      "serviceResourceDefinitions": [
+        {
+          "name": "ryanwebapp",
+          "composedOf": {
+            "arm": {
+              "templatePath": "azuredeploy_swapslot.json",
+              "parametersPath": "azuredeployparameters_swapslot.json"
+            }
+            /*"extension": {
+              "rolloutParametersPath": "azuredeploy.rolloutparameters.json"
+            }*/
+          }
+        }
+      ]
+    }
+  ],
+  "serviceResourceGroups": [
+    {
+      "azureResourceGroupName": "ryandeploytestingeast",
+      "location": "East US",
+      "instanceOf": "ryanwebsitegroup",
+      "azureSubscriptionId": "84cf99a3-1ad1-4304-bcf2-95b76da5f3d5",
+      "scopeTags": [
+        {
+          "name": "MyAppCompute"
+        }
+      ],
+      "serviceResources": [
+        {
+          "name": "ryanwebappeastus",
+          "instanceOf": "ryanwebapp",
+          "scopeTags": [
+            {
+              "name": "EastUSRegion"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "azureResourceGroupName": "ryandeploytestingwest",
+      "location": "West US 2",
+      "instanceOf": "ryanwebsitegroup",
+      "azureSubscriptionId": "84cf99a3-1ad1-4304-bcf2-95b76da5f3d5",
+      "scopeTags": [
+        {
+          "name": "MyAppCompute"
+        }
+      ],
+      "serviceResources": [
+        {
+          "name": "ryanwebappwestus",
+          "instanceOf": "ryanwebapp",
+          "scopeTags": [
+            {
+              "name": "WestUSRegion"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
